@@ -1,0 +1,11 @@
+apiVersion: v2
+name: agentic-controller
+description: Syncs GitHub gh-aw agentic workflows, their runs and usage stats into Kubernetes.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+annotations:
+  catalog.cattle.io/display-name: Agentic Controller
+  catalog.cattle.io/namespace: cattle-agentic-system
+  catalog.cattle.io/release-name: agentic-controller
+  catalog.cattle.io/os: linux

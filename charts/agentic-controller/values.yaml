@@ -1,0 +1,35 @@
+image:
+  repository: agentic-controller
+  tag: dev
+  # IfNotPresent works with images imported straight into containerd (no registry).
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+# Log level: debug, info or error.
+logLevel: info
+
+# GitHub REST API base URL (GitHub Enterprise: https://<host>/api/v3).
+githubApiUrl: https://api.github.com
+
+# Maximum artifact collections per AgentRepository per sync interval.
+maxCollectionsPerSync: 60
+
+leaderElection: true
+
+# One-off repair: delete imported runs where the gh-aw agent job did not run, reset all Agent
+# stats and recount. WARNING: stats of already-pruned runs are lost. Enable for a single
+# rollout, then set back to false.
+rebuildStats: false
+
+resources:
+  requests:
+    cpu: 20m
+    memory: 64Mi
+  limits:
+    memory: 256Mi
+
+nodeSelector:
+  kubernetes.io/os: linux
+tolerations: []
+affinity: {}

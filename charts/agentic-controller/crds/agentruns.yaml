@@ -1,0 +1,159 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: agentruns.agentic.rancher.io
+spec:
+  group: agentic.rancher.io
+  names:
+    kind: AgentRun
+    listKind: AgentRunList
+    plural: agentruns
+    singular: agentrun
+    shortNames: [arun]
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Agent
+          type: string
+          jsonPath: .spec.agentRef
+        - name: Origin
+          type: string
+          jsonPath: .spec.origin
+        - name: Phase
+          type: string
+          jsonPath: .status.phase
+        - name: AI Credits
+          type: number
+          jsonPath: .status.usage.aiCredits
+        - name: Started
+          type: date
+          jsonPath: .status.startTime
+      schema:
+        openAPIV3Schema:
+          type: object
+          description: |
+            One run of an Agent on GitHub Actions. Create one with origin "rancher" to dispatch
+            the workflow; the controller imports runs started on GitHub with origin "github".
+          properties:
+            spec:
+              type: object
+              required: [agentRef]
+              properties:
+                agentRef:
+                  type: string
+                  description: Name of the Agent in the same namespace.
+                  x-kubernetes-validations:
+                    - rule: self == oldSelf
+                      message: agentRef is immutable
+                origin:
+                  type: string
+                  enum: [rancher, github]
+                  default: rancher
+                ref:
+                  type: string
+                  description: Branch or tag to run the workflow on. Defaults to the repository branch.
+                inputs:
+                  type: object
+                  description: workflow_dispatch inputs.
+                  additionalProperties:
+                    type: string
+                githubRunId:
+                  type: integer
+                  format: int64
+                  description: Set by the controller for imported runs.
+            status:
+              type: object
+              properties:
+                phase:
+                  type: string
+                  enum: [Pending, Dispatched, Queued, Running, Succeeded, Failed, Cancelled, Error]
+                message:
+                  type: string
+                githubRunId:
+                  type: integer
+                  format: int64
+                runNumber:
+                  type: integer
+                  format: int64
+                runAttempt:
+                  type: integer
+                htmlUrl:
+                  type: string
+                event:
+                  type: string
+                actor:
+                  type: string
+                headBranch:
+                  type: string
+                conclusion:
+                  type: string
+                dispatchTime:
+                  type: string
+                  format: date-time
+                startTime:
+                  type: string
+                  format: date-time
+                completionTime:
+                  type: string
+                  format: date-time
+                durationSeconds:
+                  type: integer
+                  format: int64
+                model:
+                  type: string
+                usage:
+                  type: object
+                  description: From the gh-aw "usage" artifact (agent_usage.json).
+                  properties:
+                    inputTokens:
+                      type: integer
+                      format: int64
+                    outputTokens:
+                      type: integer
+                      format: int64
+                    cacheReadTokens:
+                      type: integer
+                      format: int64
+                    cacheWriteTokens:
+                      type: integer
+                      format: int64
+                    aiCredits:
+                      type: number
+                usageState:
+                  type: string
+                  description: Whether usage and outputs were collected.
+                  enum: [Pending, Collected, Unavailable]
+                outputs:
+                  type: array
+                  description: From the gh-aw "safe-outputs-items" artifact.
+                  items:
+                    type: object
+                    required: [type]
+                    properties:
+                      type:
+                        type: string
+                        description: gh-aw item type, e.g. create_pull_request, add_comment, add_labels.
+                      kind:
+                        type: string
+                        description: Normalised kind used for stats.
+                        enum: [pullRequest, issue, comment, label, push, other]
+                      repo:
+                        type: string
+                      number:
+                        type: integer
+                        format: int64
+                      url:
+                        type: string
+                      title:
+                        type: string
+                      state:
+                        type: string
+                        description: For pull requests, open, merged or closed. Refreshed while open.
+                counted:
+                  type: boolean
+                  description: True once this run has been added to Agent.status.daily.

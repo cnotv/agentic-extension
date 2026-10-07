@@ -1,0 +1,23 @@
+# Syncs the gh-aw agentic workflows of rancher/dashboard into the agentic-demo namespace.
+#
+# Create the token Secret first (never commit a token):
+#   kubectl create namespace agentic-demo
+#   kubectl -n agentic-demo create secret generic github-token --from-literal=token="$(gh auth token)"
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agentic-demo
+---
+apiVersion: agentic.rancher.io/v1alpha1
+kind: AgentRepository
+metadata:
+  name: dashboard
+  namespace: agentic-demo
+spec:
+  repository: rancher/dashboard
+  secretRef:
+    name: github-token
+    key: token
+  syncInterval: 10m
+  backfillDays: 3
+  maxRunsPerAgent: 50

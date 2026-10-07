@@ -1,0 +1,161 @@
+agentic:
+  product: Agents
+
+  overview:
+    menu: Overview
+    title: Agentic workflows
+    subtitle: gh-aw agents synced from your GitHub repositories. Runs execute on GitHub Actions.
+    days: "{d} days"
+    byAgent: By agent, last {days} days
+    recentRuns: Recent runs
+    noController: The agentic controller is not installed, so the Agent resources are missing. Install the agentic-controller chart first.
+    empty:
+      title: No repositories yet
+      description: Add a GitHub repository that contains gh-aw workflows (.github/workflows/*.md with a .lock.yml).
+      action: Add repository
+
+  stats:
+    agents: Agents
+    runs: Runs
+    runsDetail: "{failed} failed · {cancelled} cancelled"
+    succeeded: Succeeded
+    failed: Failed
+    cancelledCount: "{n} cancelled"
+    successRate: Success rate
+    avgDuration: "Avg. {d} per run"
+    aiCredits: AI credits
+    perRun: "{n} per run"
+    tokens: "{n} tokens"
+    pullRequests: Pull requests
+    prDetail: "{merged} merged · {closed} closed"
+    otherOutputs: Other outputs
+    otherDetail: "{comments} comments · {issues} issues · {labels} labels"
+    duration: Duration
+    inputOutput: Input / output tokens
+    cache: Cache read / write
+    cacheDetail: Tokens
+
+  chart:
+    empty: No runs in this period
+    runsTitle: Runs per day
+    runsSubtitle: Finished runs, last {days} days (UTC)
+    creditsTitle: AI credits per day
+    creditsSubtitle: Reported by gh-aw, last {days} days (UTC)
+
+  headers:
+    agent: Agent
+    agents: Agents
+    repository: Repository
+    triggers: Triggers
+    dispatchable: Can run
+    runs: Runs
+    successRate: Success
+    aiCredits: AI credits
+    pullRequests: PRs
+    lastRun: Last run
+    lastSync: Last sync
+    rateLimit: API quota
+    origin: Origin
+    event: Event
+    duration: Duration
+    started: Started
+
+  agent:
+    openGitHub: Open on GitHub
+    dispatchable: Can be run from Rancher
+    notDispatchable: This agent has no workflow_dispatch trigger, so it can only be started by its GitHub triggers. Stats are still collected.
+    run:
+      action: Run
+      title: "Run {name}"
+      description: "Dispatches the workflow on GitHub Actions in {repo}. Progress and results appear here as the run proceeds."
+      costWarning: This starts a real workflow run that uses AI credits and may comment on or open issues and pull requests.
+      ref: Branch or tag
+      refPlaceholder: Repository branch
+      confirm: Run
+    tabs:
+      runs: Runs
+      configuration: Configuration
+    fields:
+      repository: Repository
+      workflow: Workflow
+      engine: Engine
+      schedule: Schedule
+      slashCommand: Slash command
+      timeout: Timeout
+      state: Workflow state
+      safeOutputs: Safe outputs
+      inputs: Inputs
+
+  run:
+    ofAgent: "Run of"
+    usageUnavailable: No usage artifact
+    outputsPending: Collecting outputs from the run artifacts…
+    noOutputs: This run produced no outputs
+    tabs:
+      outputs: Outputs
+      details: Details
+    fields:
+      event: Event
+      actor: Actor
+      branch: Branch
+      runNumber: Run
+      model: Model
+      conclusion: Conclusion
+      input: "Input: {name}"
+    outputs:
+      kind: Kind
+      target: Target
+      state: State
+      kinds:
+        pullRequest: Pull request
+        issue: Issue
+        comment: Comment
+        label: Labels
+        push: Push to PR branch
+        other: Other
+
+  repository:
+    suspend: Suspend sync
+    resume: Resume sync
+    sections:
+      source: Source
+      auth: GitHub token
+      sync: Sync
+    fields:
+      repository: Repository
+      repositoryPlaceholder: owner/name, e.g. rancher/dashboard
+      repositoryInvalid: Use the form owner/name
+      branch: Branch
+      branchPlaceholder: Default branch
+      workflowsPath: Workflows path
+      syncInterval: Sync every
+      minutesSuffix: min
+      backfillDays: Import history
+      daysSuffix: days
+      maxRunsPerAgent: Keep runs per agent
+      runsSuffix: runs
+      suspend: Suspend sync
+    secret:
+      help: The token stays in a Secret and is only read by the controller. It needs read access to contents, actions and pull requests, plus actions write to run agents.
+      new: Paste a token
+      existing: Use an existing Secret
+      token: GitHub token
+      name: Secret
+      key: Key
+
+typeLabel:
+  agentic.rancher.io.agentrepository: |-
+    {count, plural,
+      one { Repository }
+      other { Repositories }
+    }
+  agentic.rancher.io.agent: |-
+    {count, plural,
+      one { Agent }
+      other { Agents }
+    }
+  agentic.rancher.io.agentrun: |-
+    {count, plural,
+      one { Run }
+      other { Runs }
+    }

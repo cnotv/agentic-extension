@@ -1,0 +1,5 @@
+# Fast dev image: expects a binary cross-compiled on the host into bin/manager-linux.
+FROM gcr.io/distroless/static:nonroot
+COPY bin/manager-linux /manager
+USER 65532:65532
+ENTRYPOINT ["/manager"]
