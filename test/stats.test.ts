@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
   lastDays, mergeDaily, sumBuckets, successRate, averageDuration, totalTokens,
   formatCredits, formatDuration, emptyTotals
-} from '../pkg/agentic/utils/stats.ts';
+} from '../pkg/agentic-dashboard/utils/stats.ts';
 
 const NOW = new Date('2026-10-07T15:30:00Z');
 

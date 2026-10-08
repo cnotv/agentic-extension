@@ -47,7 +47,7 @@ All resources are `agentic.rancher.io/v1alpha1` and namespaced. The CRDs are in
 
 | Path | What |
 |---|---|
-| [pkg/agentic](pkg/agentic) | UI extension: product, models, pages, charts, l10n |
+| [pkg/agentic-dashboard](pkg/agentic-dashboard) | UI extension: product, models, pages, charts, l10n |
 | [controller](controller) | Go controller (controller-runtime) |
 | [charts/agentic-controller](charts/agentic-controller) | Helm chart: CRDs, controller, RBAC |
 | [examples](examples) | Sample `AgentRepository` |
@@ -103,7 +103,7 @@ API=https://<rancher-host> yarn dev       # https://127.0.0.1:8005/agentic/c/_/o
 Or build the package and load it into a running Rancher:
 
 ```sh
-yarn build-pkg agentic
+yarn build-pkg agentic-dashboard
 yarn serve-pkgs
 ```
 

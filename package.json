@@ -21,6 +21,6 @@
     "publish-pkgs": "./node_modules/@rancher/shell/scripts/extension/publish",
     "parse-tag-name": "./node_modules/@rancher/shell/scripts/extension/parse-tag-name",
     "test": "node --test test/*.test.ts",
-    "lint": "eslint pkg/agentic test"
+    "lint": "eslint pkg/agentic-dashboard test"
   }
 }

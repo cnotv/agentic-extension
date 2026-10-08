@@ -1,6 +1,6 @@
 {
-  "name": "agentic",
-  "description": "agentic plugin",
+  "name": "agentic-dashboard",
+  "description": "Agentic workflows for Rancher",
   "version": "0.1.0",
   "private": false,
   "rancher": {
