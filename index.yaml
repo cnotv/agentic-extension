@@ -1,0 +1,23 @@
+apiVersion: v1
+entries:
+  agentic-dashboard:
+  - annotations:
+      catalog.cattle.io/certified: rancher
+      catalog.cattle.io/namespace: cattle-ui-plugin-system
+      catalog.cattle.io/os: linux
+      catalog.cattle.io/permits-os: linux, windows
+      catalog.cattle.io/rancher-version: '>= 2.10.0'
+      catalog.cattle.io/scope: management
+      catalog.cattle.io/ui-component: plugins
+      catalog.cattle.io/ui-extensions-version: '>= 3.0.0 < 4.0.0'
+    apiVersion: v2
+    appVersion: 0.1.1
+    created: "2026-10-09T16:07:57.687483707Z"
+    description: Agentic workflows for Rancher
+    digest: 8746cf5d17047b7bfe9106fccb3b7ef65b2b421f80be55d75b5c1eee95dd4b40
+    name: agentic-dashboard
+    type: application
+    urls:
+    - assets/agentic-dashboard/agentic-dashboard-0.1.1.tgz
+    version: 0.1.1
+generated: "2026-10-09T16:07:57.686295648Z"

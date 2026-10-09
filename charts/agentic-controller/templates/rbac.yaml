@@ -1,0 +1,41 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: agentic-controller
+  labels:
+    {{- include "agentic-controller.labels" . | nindent 4 }}
+rules:
+  - apiGroups: ["agentic.rancher.io"]
+    resources:
+      - agentrepositories
+      - agentrepositories/status
+      - agents
+      - agents/status
+      - agentruns
+      - agentruns/status
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # Only the Secret named by an AgentRepository is read, uncached.
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+  - apiGroups: ["", "events.k8s.io"]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: agentic-controller
+  labels:
+    {{- include "agentic-controller.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: agentic-controller
+subjects:
+  - kind: ServiceAccount
+    name: agentic-controller
+    namespace: {{ .Release.Namespace }}

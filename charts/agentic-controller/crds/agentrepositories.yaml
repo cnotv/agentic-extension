@@ -1,0 +1,128 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: agentrepositories.agentic.rancher.io
+spec:
+  group: agentic.rancher.io
+  names:
+    kind: AgentRepository
+    listKind: AgentRepositoryList
+    plural: agentrepositories
+    singular: agentrepository
+    shortNames: [arepo]
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Repository
+          type: string
+          jsonPath: .spec.repository
+        - name: State
+          type: string
+          jsonPath: .status.phase
+        - name: Agents
+          type: integer
+          jsonPath: .status.agentCount
+        - name: Last Sync
+          type: date
+          jsonPath: .status.lastSyncTime
+      schema:
+        openAPIV3Schema:
+          type: object
+          description: A GitHub repository whose gh-aw agentic workflows are synced into the cluster.
+          properties:
+            spec:
+              type: object
+              required: [repository, secretRef]
+              properties:
+                repository:
+                  type: string
+                  description: GitHub repository as owner/name.
+                  pattern: '^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$'
+                branch:
+                  type: string
+                  description: Branch to read workflow files from. Defaults to the repository default branch.
+                workflowsPath:
+                  type: string
+                  default: .github/workflows
+                secretRef:
+                  type: object
+                  description: Secret in the same namespace holding a GitHub token.
+                  required: [name]
+                  properties:
+                    name:
+                      type: string
+                    key:
+                      type: string
+                      default: token
+                syncInterval:
+                  type: string
+                  description: How often to sync, as a Go duration.
+                  default: 10m
+                backfillDays:
+                  type: integer
+                  description: Days of run history to import on first sync.
+                  default: 14
+                  minimum: 0
+                  maximum: 90
+                maxRunsPerAgent:
+                  type: integer
+                  description: AgentRun objects kept per agent. Older ones are pruned; their stats stay in Agent.status.daily.
+                  default: 50
+                  minimum: 1
+                  maximum: 500
+                suspend:
+                  type: boolean
+                  description: Pause syncing.
+                  default: false
+            status:
+              type: object
+              properties:
+                phase:
+                  type: string
+                  enum: [Pending, Syncing, Ready, Error]
+                message:
+                  type: string
+                observedGeneration:
+                  type: integer
+                  format: int64
+                lastSyncTime:
+                  type: string
+                  format: date-time
+                agentCount:
+                  type: integer
+                defaultBranch:
+                  type: string
+                htmlUrl:
+                  type: string
+                rateLimit:
+                  type: object
+                  properties:
+                    limit:
+                      type: integer
+                    remaining:
+                      type: integer
+                    reset:
+                      type: string
+                      format: date-time
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    required: [type, status]
+                    properties:
+                      type:
+                        type: string
+                      status:
+                        type: string
+                      reason:
+                        type: string
+                      message:
+                        type: string
+                      lastTransitionTime:
+                        type: string
+                        format: date-time
