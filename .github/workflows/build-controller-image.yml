@@ -1,0 +1,41 @@
+name: Build and Push Controller Image
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'agentic-controller-*'
+
+jobs:
+  build-controller-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # The image tag follows the chart appVersion, so the chart defaults always point at a pushed image
+      - name: Read chart appVersion
+        id: version
+        run: echo "tag=$(sed -n 's/^appVersion: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' charts/agentic-controller/Chart.yaml)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: controller
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/agentic-controller:${{ steps.version.outputs.tag }}
+            ghcr.io/${{ github.repository_owner }}/agentic-controller:sha-${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.description=Agentic workflows controller for Rancher

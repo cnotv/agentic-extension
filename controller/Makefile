@@ -1,6 +1,8 @@
 # Dev workflow for the agentic controller against the local Rancher (k3s inside the rancher-16486 container).
 REPO_ROOT    := $(abspath ..)
 IMG          ?= agentic-controller:dev
+IMG_REPO     := $(firstword $(subst :, ,$(IMG)))
+IMG_TAG      := $(lastword $(subst :, ,$(IMG)))
 ARCH         ?= arm64
 NAMESPACE    ?= cattle-agentic-system
 RANCHER      ?= rancher-16486
@@ -51,7 +53,8 @@ load: ## Import the image into the k3s containerd
 
 deploy: ## Render the chart and apply it (CRDs included)
 	$(KUBECTL) create namespace $(NAMESPACE) --dry-run=client -o yaml | $(KUBECTL) apply -f -
-	helm template agentic-controller $(CHART) -n $(NAMESPACE) --include-crds | $(KUBECTL) apply -n $(NAMESPACE) -f -
+	helm template agentic-controller $(CHART) -n $(NAMESPACE) --include-crds \
+		--set image.repository=$(IMG_REPO) --set image.tag=$(IMG_TAG) | $(KUBECTL) apply -n $(NAMESPACE) -f -
 
 restart: ## Pick up a re-imported image with the same tag
 	$(KUBECTL) -n $(NAMESPACE) rollout restart deployment/agentic-controller

@@ -1,7 +1,7 @@
 image:
-  repository: agentic-controller
-  tag: dev
-  # IfNotPresent works with images imported straight into containerd (no registry).
+  repository: ghcr.io/cnotv/agentic-controller
+  tag: 0.1.0
+  # IfNotPresent also works with images imported straight into containerd (make dev overrides these).
   pullPolicy: IfNotPresent
 
 replicaCount: 1

@@ -1,5 +1,5 @@
 # Multi-stage build for real (CI) images.
-FROM golang:1.22 AS build
+FROM --platform=$BUILDPLATFORM golang:1.22 AS build
 ARG TARGETOS=linux
 ARG TARGETARCH
 WORKDIR /src
