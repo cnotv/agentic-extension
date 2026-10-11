@@ -18,7 +18,11 @@ jobs:
       # The image tag follows the chart appVersion, so the chart defaults always point at a pushed image
       - name: Read chart appVersion
         id: version
-        run: echo "tag=$(sed -n 's/^appVersion: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' charts/agentic-controller/Chart.yaml)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "tag=$(sed -n 's/^appVersion: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' charts/agentic-controller/Chart.yaml)" >> "$GITHUB_OUTPUT"
+
+      # QEMU runs the arm64 build stage; the Dockerfile stays compatible with the legacy builder (make image-full)
+      - uses: docker/setup-qemu-action@v3
 
       - uses: docker/setup-buildx-action@v3
 
